@@ -1,6 +1,5 @@
 import React, {useRef} from "react";
 import '../App.css'
-import {useDrag} from "react-dnd";
 import Room from "./Room";
 
 const Main = () => {
@@ -48,8 +47,9 @@ const Main = () => {
   const handleDragEnter = (e: any) => {
     console.log("enter:", e)
   }
-
+  console.log('Main re render?')
   return (
+
     <div className='main'>
       <Room/>
     </div>

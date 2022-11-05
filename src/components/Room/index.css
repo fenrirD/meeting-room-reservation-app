@@ -134,19 +134,19 @@
   /*border-bottom: 1px solid;*/
 }
 .room_col > div {
-  /*display: flex;*/
+  display: flex;
   flex: 1 0 auto;
   /*min-width: 6rem;*/
   /*height: 100%;*/
   /*width: 200px;*/
-  border-right: 1px solid;
+  /*border-right: 1px solid;*/
 }
 
-/*.room_col_sub {*/
-/*  flex: 1 0 auto;*/
+.room_col_sub {
+  flex: 1 0 auto;
 /*  min-width: 6rem;*/
-/*  border-right: 1px solid;*/
-/*}*/
+  border-right: 1px solid;
+}
 
 .event_zone {
   bottom: 1em;

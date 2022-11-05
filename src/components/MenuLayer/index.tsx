@@ -7,19 +7,26 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import {useEffect, useState} from "react";
+import {useDispatch} from "react-redux";
+import {registerReservation} from "../../reudx/reservationSlice";
+import {increment} from "../../reudx/counterSlice";
 
 export default function MenuLayer({open, handleClose, reservation, handleConfirm}:any) {
   console.log('reservation', reservation,reservation.roomName)
+
+  const dispatch = useDispatch()
+
   const [event, setEvent] = useState({
     roomName:reservation.roomName,
-    name:'',
-    reason:'',
+    name:reservation.name,
+    reason:reservation.reson,
     time:reservation.time
   });
 
   const handleClick = () => {
     console.log('!!!!!! handle',event)
-    handleConfirm(event)
+    handleConfirm()
+    dispatch(registerReservation(event))
   }
   const onChange = (e:any) => {
     console.log(e,"change", event)
@@ -33,8 +40,8 @@ export default function MenuLayer({open, handleClose, reservation, handleConfirm
     console.log('MenuLayer' , event)
     setEvent({
       roomName:reservation.roomName,
-      name:'',
-      reason:'',
+      name:reservation.name,
+      reason:reservation.reason,
       time:reservation.time
     })
   },[reservation])
