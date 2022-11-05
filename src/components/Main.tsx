@@ -8,30 +8,30 @@ const Main = () => {
   const roomValEL = useRef<HTMLDivElement>(null);
 
   const tableEl = useRef<HTMLTableElement>(null)
-  const mouseMove = (e: any) => {
-    console.log('mouse move', e.target)
-    e.target.style.backgroundColor = 'red'
-  }
-
-  const mouseUp = (e: any) => {
-    console.log('mouseup!')
-    e.preventDefault()
-    if (roomValEL?.current) {
-      roomValEL.current.removeEventListener("mousemove", mouseMove)
-      roomValEL.current.removeEventListener("mouseup", mouseUp)
-    }
-  }
-  const handleMouseDown = (e: any) => {
-    console.log('click mouse!')
-    if (roomValEL?.current) {
-      console.log(roomValEL)
-      roomValEL.current.addEventListener("mouseup", mouseUp)
-      roomValEL.current.addEventListener("mousemove", mouseMove)
-    }
-
-    // console.log(e,'move')
-    console.log(roomValEL)
-  }
+  // const mouseMove = (e: any) => {
+  //   console.log('mouse move!', e.target)
+  //   e.target.style.backgroundColor = 'red'
+  // }
+  //
+  // const mouseUp = (e: any) => {
+  //   console.log('mouseup!')
+  //   e.preventDefault()
+  //   if (roomValEL?.current) {
+  //     roomValEL.current.removeEventListener("mousemove", mouseMove)
+  //     roomValEL.current.removeEventListener("mouseup", mouseUp)
+  //   }
+  // }
+  // const handleMouseDown = (e: any) => {
+  //   console.log('click mouse!')
+  //   if (roomValEL?.current) {
+  //     console.log(roomValEL)
+  //     roomValEL.current.addEventListener("mouseup", mouseUp)
+  //     roomValEL.current.addEventListener("mousemove", mouseMove)
+  //   }
+  //
+  //   // console.log(e,'move')
+  //   console.log(roomValEL)
+  // }
   const handleDragEl = (e: any) => {
     // console.log('dragEL', e)
   }

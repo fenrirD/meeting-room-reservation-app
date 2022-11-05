@@ -136,7 +136,7 @@
 .room_col > div {
   /*display: flex;*/
   flex: 1 0 auto;
-  min-width: 6rem;
+  /*min-width: 6rem;*/
   /*height: 100%;*/
   /*width: 200px;*/
   border-right: 1px solid;

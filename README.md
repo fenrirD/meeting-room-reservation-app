@@ -2,6 +2,20 @@
 
 ## 개발 요구사항
 
+## 예약 데이터 구조
+
+```json
+{
+  "room": "string",
+  "name": "이시용",
+  "reason": "dqdqq",
+  "time": "time",
+}
+
+```
+
+
+
 ### 예약 일정 생성
 * Mouse Move, Mouse Down, Mouse Up을 통해서 예약을 생성
 * 생성 할 떄, 모달로 입력받음.
