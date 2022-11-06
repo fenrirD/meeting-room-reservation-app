@@ -153,15 +153,24 @@
   position: absolute;
   top: 0;
   width: 100%;
+  cursor: pointer;
 }
 
 .event_zone div {
   z-index: 2;
+
+}
+
+.event_zone div div:hover div {
+  display: block;
 }
 .test_css {
   background: #f5d9fa78;
   cursor: move;
 }
+/*.event_zone div:hover {*/
+/*  */
+/*}*/
 
 .resize_start {
   height: auto;
@@ -172,7 +181,10 @@
   right: auto;
   top: 6px;
   width: 0.25em;
+  display: none;
+  z-index: 5;
 }
+
 .resize_start::after {
   left: -0.125em;
   margin-top: -0.25em;
@@ -197,6 +209,8 @@
   right: auto;
   top: 6px;
   width: 0.25em;
+  display: none;
+  z-index: 5;
 }
 .resize_end::after {
   right: -0.125em;
