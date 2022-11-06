@@ -31,8 +31,9 @@ const EventComponent = memo(function EventComponent ({data, width, handleClickEv
   const [startHour, startMinute] = startTime.split(':');
   const [endHour, endMinute] = endTime.split(':');
   const colWidth = width / 9
+  const colMWidth = width / 18 // 30분 단위로 계산
   const startLeft = Number(startHour) % 9 + (startMinute === '30' ? 0.5 : 0)
-  const calc = (Number(endHour) - Number(startHour)) + ((Number(endMinute) - Number(startMinute)) ? 0.5 : 0)
+  const calc = ((Number(endHour) * 60 + (Number(endMinute)) - Number(startHour)* 60 + - Number(startMinute) )) / 30
   const dispatch = useDispatch()
   const handleEventClick = (e: any) => {
     console.log('handleEventClick', data)
@@ -61,21 +62,26 @@ const EventComponent = memo(function EventComponent ({data, width, handleClickEv
   }),[data])
 
   drag(div)
-  console.log('EventComponent render =>', data)
+  console.log('EventComponent render =>', data, calc)
   // console.log('drag data=>',data, "???", handlerId)
   return (
-    <div style={{
-      width: `${colWidth * calc}px`,
-      height: '50px',
-      backgroundColor: 'red',
-      top: '0px',
-      position: 'absolute',
-      left: `${((colWidth) * startLeft / width) * 100}%`,
-      zIndex: isDragging ? 0 : 2,
-      opacity: isDragging ? 0.3 : 1
-    }} ref={div} onClick={handleEventClick} data-testid={handlerId}>
-      {data.name}<br/>
-      {data.time}
+    <div>
+
+      <div style={{
+        width: `${colMWidth * calc}px`,
+        height: '50px',
+        backgroundColor: 'red',
+        top: '0.5rem',
+        position: 'absolute',
+        left: `${((colWidth) * startLeft / width) * 100}%`,
+        zIndex: isDragging ? 0 : 2,
+        opacity: isDragging ? 0.3 : 1
+      }} ref={div} onClick={handleEventClick} data-testid={handlerId}>
+        <div className='resize_start'></div>
+        <div className='resize_end'></div>
+        {data.name}<br/>
+        {data.time}
+      </div>
     </div>
   )
 })

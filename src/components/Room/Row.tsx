@@ -1,17 +1,26 @@
-import React, {useRef, useState} from "react";
+import React, {useCallback, useRef, useState} from "react";
 import EventZone from "./EventZone";
 import RowItem from "./RowItem";
 import {TIMES} from "../../utills/data/sampleData";
 import {useAppSelector} from "../../reudx/hooks";
+import _ from "lodash";
 
 const Row = ({roomName, data, handleClickOpen, handleClickEvent, dragUpdateData}: any) => {
   const roomValEL = useRef<HTMLDivElement>(null);
   const [isDrag, setIsDrag] = useState<Boolean>(false);
   const [event, setEvent] = useState<any>(null);
+  const [target,setTarget] =useState<any>([]);
+  const a = useCallback( _.throttle((e:any)=>{
+    const n = target.filter((div:HTMLDivElement)=>div.dataset.id !==e.dataset.id)
+    console.log('mouseup',n, e.dataset.id)
+    setTarget([ ...n, e])
+  },500),[target])
   const mouseMove = (e: any) => {
-    if (isDrag) {
-      // console.log('mouse move!', e.target)
+    if (isDrag && e.target.dataset.id) {
+      console.log('mouse move!', e.target)
       // e.target.style.backgroundColor = 'red'
+      e.target.classList.add('test_css')
+      a(e.target)
     }
   }
   const reservation = useAppSelector((state) => {
@@ -38,7 +47,7 @@ const Row = ({roomName, data, handleClickOpen, handleClickEvent, dragUpdateData}
   const mouseUp = (e: any) => {
     e.preventDefault()
     if (roomValEL?.current) {
-      console.log('mouseup!', e, e.target, event)
+      console.log('mouseup!', e, e.target, event, target)
       const newE = {
         endHour: e.target.dataset.time,
         endMinute: e.target.dataset.index
@@ -46,6 +55,8 @@ const Row = ({roomName, data, handleClickOpen, handleClickEvent, dragUpdateData}
       setIsDrag(false)
       setEvent({...event, ...newE})
       handleClickOpen({...event, ...newE, roomName: roomName})
+      target.forEach((d:HTMLDivElement)=>d.classList.remove('test_css'))
+      e.target.classList.remove('test_css')
       // roomValEL.current.removeEventListener("mousemove", mouseMove)
       // roomValEL.current.removeEventListener("mouseup", mouseUp)
     }
@@ -67,7 +78,7 @@ const Row = ({roomName, data, handleClickOpen, handleClickEvent, dragUpdateData}
     console.log(roomValEL)
   }
 
-  console.log('RoomValue:', events, events[roomName], roomName)
+  console.log('RoomValue:', events, events[roomName], roomName, isDrag)
 
   return (
     <div className='room_value'>
@@ -77,8 +88,8 @@ const Row = ({roomName, data, handleClickOpen, handleClickEvent, dragUpdateData}
            onMouseUp={mouseUp} >
         {TIMES.map((time, idx) =>
           <div key={`${roomName}_time_${idx}`}>
-            <RowItem roomName={roomName} time={time} key={`time_${roomName}_0_${time}`} index={0}/>
-            <RowItem roomName={roomName} time={time} key={`time_${roomName}_1_${time}`} index={1}/>
+            <RowItem roomName={roomName} time={time} key={`time_${roomName}_0_${time}`} index={0} />
+            <RowItem roomName={roomName} time={time} key={`time_${roomName}_1_${time}`} index={1} />
           </div>
         )}
 

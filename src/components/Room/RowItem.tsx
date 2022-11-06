@@ -4,7 +4,7 @@ import {useDrop} from "react-dnd";
 const RowItem = ({roomName, time, index}: any) => {
 
   const divEl = useRef<HTMLDivElement>(null);
-
+  console.log('RoomValue','rerneder?')
   const [{canDrop, isOver, handlerId}, drop] = useDrop(() => ({
     accept: 'box',
     // canDrop: () => false,
@@ -17,13 +17,15 @@ const RowItem = ({roomName, time, index}: any) => {
       const [startHour, startMinute] = startTime.split(":").map((v:any)=>Number(v));
       const [endHour, endMinute] = endTime.split(":").map((v:any)=>Number(v));
       const calcTime = (endHour*60+endMinute) - (startHour*60+startMinute)
-      const newEndTime = `${time}:${index ? "30" : '00'}~${Math.floor(calcTime/60) + time}:${index ? '30' : '00'}`
+      const newStartTime = [time, index ? 30 : 0];
+      const newEndTime = (newStartTime[0]*60 + newStartTime[1]) + calcTime;
+      const strTime = `${newStartTime[0]}:${index ? "30" : '00'}~${Math.floor(newEndTime/60)}:${newEndTime%60? '30' : '00'}`
       // console.log(roomName, item, monitor, a, b)
       console.log('end Time', newEndTime, calcTime)
       const newItem = {
         ...item,
         roomName: roomName,
-        time: newEndTime
+        time: strTime
       }
       return ({name: roomName, left: b?.x, newItem})
     },
@@ -35,7 +37,7 @@ const RowItem = ({roomName, time, index}: any) => {
   }))
   drop(divEl)
   return (
-    <div ref={divEl} className='room_col_sub' data-index={index} data-time={time} data-id={handlerId}></div>
+    <div ref={divEl} className='room_col_sub' data-index={index} data-time={time} data-id={handlerId} ></div>
 
   )
 }
