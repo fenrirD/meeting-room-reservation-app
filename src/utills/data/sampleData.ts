@@ -1,4 +1,4 @@
-import {Reservation} from "../../type";
+import {Reservation, Room, Time} from "../../type";
 
 
 export const SAMPLE_DATA:Reservation[] = [
@@ -22,6 +22,6 @@ export const SAMPLE_DATA:Reservation[] = [
   }
 ]
 
-export const TIMES = [9, 10, 11, 12, 13, 14, 15, 16, 17]
+export const TIMES:Time[] = [9, 10, 11, 12, 13, 14, 15, 16, 17]
 
-export const ROOMS = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J',]
+export const ROOMS:Room[] = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J',]

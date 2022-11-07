@@ -1,7 +1,7 @@
 export interface Reservation {
   readonly id: number
-  roomName: string,
-  name:string,
+  roomName: Room,
+  name: string,
   purpose: string,
   startTime: string,
   endTime: string,
@@ -9,9 +9,9 @@ export interface Reservation {
 }
 
 export interface ReservationInfo {
-  id?:number,
-  roomName: string,
-  name?:string,
+  id?: number,
+  roomName: Room,
+  name?: string,
   purpose?: string,
   startTime: string,
   endTime: string,
@@ -23,6 +23,6 @@ export interface MenuLayer {
   reservationInfo: ReservationInfo
 }
 
-export type Time = number
+export type Time = 9 | 10 | 11 | 12 | 13 | 14 | 15 | 16 | 17
 
-export type Room = string
+export type Room = 'A'| 'B'| 'C'| 'D'| 'E'| 'F'| 'G'| 'H'| 'I'| 'J'| ''
