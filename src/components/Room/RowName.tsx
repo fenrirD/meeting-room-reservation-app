@@ -1,8 +1,6 @@
 import React from "react";
-import exp from "constants";
 import {ROOMS} from "../../utills/data/sampleData";
 
-const RoomNameDiv = () => <div>A</div>
 const RoomName = () => {
 
   return (

@@ -1,19 +1,12 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import type { RootState } from './store'
 import {SAMPLE_DATA} from "../utills/data/sampleData";
+import {Reservation} from "../type";
 
-// Define a type for the slice state
-interface reservationState {
-  id:string,
-  roomName: string,
-  name: string,
-  reason: string,
-  time: string
 
-}
 
 // Define the initial state using that type
-const initialState = SAMPLE_DATA as reservationState[]
+const initialState = SAMPLE_DATA as Reservation[]
 
 
 export const reservationSlice = createSlice({

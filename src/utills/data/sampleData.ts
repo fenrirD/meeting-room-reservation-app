@@ -1,18 +1,23 @@
-{}
+import {Reservation} from "../../type";
 
-export const SAMPLE_DATA:any[] = [
+
+export const SAMPLE_DATA:Reservation[] = [
   {
-    id:'1',
+    id:1,
     roomName: 'A',
     name: "이시용",
-    reason: "그냥",
+    purpose: "그냥",
+    startTime:'9:30',
+    endTime:'10:30',
     time: "9:30~10:30"
   },
   {
-    id:'2',
+    id:2,
     roomName:'B',
     name:"윤지영",
-    reason: "저냥",
+    purpose: "저냥",
+    startTime:'12:30',
+    endTime:'14:30',
     time:"12:30~14:30"
   }
 ]

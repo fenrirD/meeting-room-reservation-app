@@ -7,50 +7,50 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import {useEffect, useState} from "react";
-import {useDispatch} from "react-redux";
-import {registerReservation} from "../../reudx/reservationSlice";
-import {increment} from "../../reudx/counterSlice";
+import {useDispatch, useSelector} from "react-redux";
+import {registerReservation, updateReservation} from "../../reudx/reservationSlice";
+import {closeMenuLayer, selectMenuLayer} from "../../reudx/menuLayerSlice";
+import {ReservationInfo} from "../../type";
 
-export default function MenuLayer({open, handleClose, reservation, handleConfirm}:any) {
-  console.log('reservation', reservation,reservation.roomName)
+export default function MenuLayer() {
 
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
+  const {isOpen, reservationInfo} = useSelector(selectMenuLayer);
 
-  const [event, setEvent] = useState({
-    roomName:reservation.roomName,
-    name:reservation.name,
-    reason:reservation.reson,
-    time:reservation.time
-  });
+  const [reservation, setReservation] = useState<ReservationInfo>(reservationInfo);
 
-  const handleClick = () => {
-    console.log('!!!!!! handle',event)
-    handleConfirm()
-    dispatch(registerReservation(event))
+  const handleRegisterClick = () => {
+    console.log('!!!!!! handle', reservation)
+    // handleConfirm()
+    dispatch(registerReservation(reservation))
+    handleClose()
   }
-  const onChange = (e:any) => {
-    console.log(e,"change", event)
-    setEvent({
-      ...event,
-      [e.target.id]:e.target.value,
+  const handleEditClick = () => {
+    dispatch(updateReservation(reservation))
+    handleClose()
+  }
+
+  const handleClose = () => {
+    dispatch(closeMenuLayer())
+  };
+
+  const onChange = (e: any) => {
+    console.log(e, "change", reservation)
+    setReservation({
+      ...reservation,
+      [e.target.id]: e.target.value,
     })
   }
 
-  useEffect(()=>{
-    console.log('MenuLayer' , event)
-    setEvent({
-      roomName:reservation.roomName,
-      name:reservation.name,
-      reason:reservation.reason,
-      time:reservation.time
-    })
-  },[reservation])
+  useEffect(() => {
+    setReservation(reservationInfo)
+  }, [reservationInfo])
 
-  console.log(event)
+  // console.log(event)
   return (
     <div>
-      <Dialog open={open} onClose={handleClose} fullWidth={true}>
-        <DialogTitle>{event.roomName}룸: 회의실 예약 설정</DialogTitle>
+      <Dialog open={isOpen} onClose={handleClose} fullWidth={true}>
+        <DialogTitle>{reservation.roomName}룸: 회의실 예약 설정</DialogTitle>
         <DialogContent>
           <DialogContentText>
             예약자명
@@ -64,7 +64,7 @@ export default function MenuLayer({open, handleClose, reservation, handleConfirm
             fullWidth
             variant="standard"
             onChange={onChange}
-            value={event.name}
+            value={reservation.name}
           />
           <DialogContentText>
             예약 목적
@@ -72,13 +72,13 @@ export default function MenuLayer({open, handleClose, reservation, handleConfirm
           <TextField
             autoFocus
             margin="dense"
-            id="reason"
+            id="purpose"
             label="Email Address"
             type="text"
             fullWidth
             variant="standard"
             onChange={onChange}
-            value={event.reason}
+            value={reservation.purpose}
           />
           <DialogContentText>
             예약 시간
@@ -95,8 +95,14 @@ export default function MenuLayer({open, handleClose, reservation, handleConfirm
           />
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose}>Cancel</Button>
-          <Button onClick={handleClick}>Subscribe</Button>
+          <Button onClick={handleClose}>취소</Button>
+          {
+            reservation.id ?
+              <Button onClick={handleEditClick}>수정</Button>
+              :
+              <Button onClick={handleRegisterClick}>등록</Button>
+          }
+
         </DialogActions>
       </Dialog>
     </div>

@@ -6,8 +6,10 @@ import {useAppSelector} from "../../reudx/hooks";
 import _ from "lodash";
 import {useDispatch} from "react-redux";
 import {updateReservation} from "../../reudx/reservationSlice";
+import {openMenuLayer} from "../../reudx/menuLayerSlice";
+import {ReservationInfo} from "../../type";
 
-const Row = ({roomName, data, handleClickOpen, handleClickEvent, dragUpdateData}: any) => {
+const Row = ({roomName, data, dragUpdateData}: any) => {
   const roomValEL = useRef<HTMLDivElement>(null);
   const [isDrag, setIsDrag] = useState<Boolean>(false);
   const [event, setEvent] = useState<any>(null);
@@ -55,6 +57,8 @@ const Row = ({roomName, data, handleClickOpen, handleClickEvent, dragUpdateData}
   }, {})
 
   console.log('소름', data, events)
+  const registerReservation = (param:ReservationInfo) => dispatch(openMenuLayer(param))
+
   const mouseUp = (e: any) => {
     e.preventDefault()
     if (roomValEL?.current && isDrag) {
@@ -65,7 +69,15 @@ const Row = ({roomName, data, handleClickOpen, handleClickEvent, dragUpdateData}
       }
       setIsDrag(false)
       setEvent({...event, ...newE})
-      handleClickOpen({...event, ...newE, roomName: roomName})
+      const param:ReservationInfo = {
+        roomName,
+        time:`${event.startHour}:${event.startMinute==1 ? '30' : '00'}~${  Number(newE.endHour)+Number(newE.endMinute)}:${newE.endMinute==1? '00' : '30'}`,
+        startTime:`${event.startHour}:${event.startMinute==1 ? '30' : '00'}`,
+        endTime: `${Number(newE.endHour)+Number(newE.endMinute)}:${newE.endMinute==1? '00' : '30'}`
+      }
+      // modal Open
+      registerReservation(param);
+      // handleClickOpen({...event, ...newE, roomName: roomName})
       target.forEach((d: HTMLDivElement) => d.classList.remove('test_css'))
       e.target.classList.remove('test_css')
     }else if(isResizeDrag){
@@ -151,11 +163,9 @@ const Row = ({roomName, data, handleClickOpen, handleClickEvent, dragUpdateData}
 
   return (
     <div className='room_value'>
-      <EventZone roomName={roomName} events={events[roomName]} handleClickEvent={handleClickEvent}
+      <EventZone roomName={roomName} events={events[roomName]}
                  dragUpdateData={dragUpdateData} isResizeDrag={isResizeDrag} handleLeftResizeClick={handleLeftResizeClick} handleLeftResizeClearClick={handleLeftResizeClearClick}/>
       <div key={`free_${roomName}`}></div>
-      {/*<div className='room_col' ref={roomValEL} onMouseDown={handleMouseDown} onMouseMove={mouseMove}*/}
-      {/*     onMouseUp={mouseUp} >*/}
       <div className='room_col' ref={roomValEL} onMouseDown={handleMouseDown} onMouseUp={mouseUp}>
         {TIMES.map((time, idx) =>
           <div key={`${roomName}_time_${idx}`}>

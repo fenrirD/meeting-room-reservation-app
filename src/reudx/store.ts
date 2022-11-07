@@ -1,11 +1,13 @@
 import { configureStore, ThunkAction, Action } from '@reduxjs/toolkit';
 import counterReducer from './counterSlice';
 import reservationReducer from "./reservationSlice";
+import menuLayerReducer from "./menuLayerSlice";
 
 export const store = configureStore({
   reducer: {
     counter: counterReducer,
-    reservation: reservationReducer
+    reservation: reservationReducer,
+    menuLayer: menuLayerReducer,
   },
 });
 

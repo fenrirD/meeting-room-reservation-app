@@ -3,26 +3,28 @@ import useResize from "../../hook/useResize";
 import {useDrag, useDrop} from "react-dnd";
 import {useDispatch} from "react-redux";
 import {updateReservation} from "../../reudx/reservationSlice";
+import {openMenuLayer} from "../../reudx/menuLayerSlice";
+import {MenuLayer, ReservationInfo} from "../../type";
 
 interface DropResult {
   name: string
 }
 
-const EventZone = memo(function EventZone ({roomName, events, handleClickEvent, dragUpdateData, isResizeDrag, handleLeftResizeClick, handleLeftResizeClearClick}: any)  {
-  console.log('rerender Event Zone', events)
+const EventZone = memo(function EventZone ({roomName, events,  dragUpdateData, isResizeDrag, handleLeftResizeClick, handleLeftResizeClearClick}: any)  {
+
   const eventDiv = useRef<HTMLDivElement>(null);
   const {width, height} = useResize(eventDiv);
   return (
     <div className='event_zone' ref={eventDiv} >
       {events && events.map((data: any, idx: any) => {
-        return <EventComponent data={data} width={width} handleClickEvent={handleClickEvent}
+        return <EventComponent data={data} width={width}
                                key={`evt_${roomName}_${idx}`} dragUpdateData={dragUpdateData} isResizeDrag={isResizeDrag} handleLeftResizeClearClick={handleLeftResizeClearClick} handleLeftResizeClick={handleLeftResizeClick}/>
       })}
 
     </div>
   )
 })
-const EventComponent = memo(function EventComponent ({data, width, handleClickEvent, dragUpdateData, isResizeDrag, handleLeftResizeClick, handleLeftResizeClearClick}: any) {
+const EventComponent = memo(function EventComponent ({data, width,  dragUpdateData, isResizeDrag, handleLeftResizeClick, handleLeftResizeClearClick}: any) {
 
   const div = useRef(null);
   // const [isDrag, setIsDrag] = useState<Boolean>(false);
@@ -36,16 +38,25 @@ const EventComponent = memo(function EventComponent ({data, width, handleClickEv
   const colMWidth = width / 18 // 30분 단위로 계산
   const startLeft = Number(startHour) % 9 + (startMinute === '30' ? 0.5 : 0)
   const calc = ((Number(endHour) * 60 + (Number(endMinute)) - Number(startHour)* 60 + - Number(startMinute) )) / 30
+
   const dispatch = useDispatch()
-  const handleEventClick = (e: any) => {
+  const handleEventClick = (data:ReservationInfo) => {
     console.log('handleEventClick', data)
-    handleClickEvent(data)
+    // handleClickEvent(data)
+    dispatch(openMenuLayer(data))
   }
   const [{isDragging,handlerId,coords}, drag] = useDrag(() => ({
     type: 'box',
     item: ()=> {
-      console.log('item?',data)
-      return data
+      console.log('item?',data,div,colMWidth * calc, colWidth * startLeft)
+      //colWidth * startLeft 옮기기 전에 시작위치
+      return {
+        ...data,
+        colLne: colMWidth * calc,
+        calc: calc,
+        originPosition: colWidth * startLeft,
+        colMWidth,
+      }
     },
     end: (item, monitor) => {
       const dropResult = monitor.getDropResult<any>()
@@ -64,11 +75,11 @@ const EventComponent = memo(function EventComponent ({data, width, handleClickEv
       handlerId: monitor.getHandlerId(),
       coords:monitor.getSourceClientOffset(),
     }),
-  }),[data,])
+  }),[data,width])
 
   drag(div)
   console.log('drag monitor',coords)
-  console.log('EventComponent render =>', data, calc)
+  console.log('EventComponent render =>', data, calc, colMWidth, colWidth , startLeft)
 
   const moseDown =(e:any) => {
     e.stopPropagation()
@@ -104,7 +115,7 @@ const EventComponent = memo(function EventComponent ({data, width, handleClickEv
       }}   data-testid={handlerId} onMouseUp={test} >
         <div className='resize_start' onMouseDown={moseDown}  ></div>
         <div className='resize_end'></div>
-        <div onClick={handleEventClick} ref={div}>
+        <div onClick={()=>handleEventClick(data)} ref={div}>
           {data.name}<br/>
           {data.time}
         </div>
