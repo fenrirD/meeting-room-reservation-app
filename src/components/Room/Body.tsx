@@ -4,7 +4,7 @@ import RowName from "./RowName";
 import Row from "./Row";
 
 const Body = () => {
-
+//((1752/9)*1.5) / 1752 * 100
   return (
     <div className="body">
       <div className='flex_none'></div>
