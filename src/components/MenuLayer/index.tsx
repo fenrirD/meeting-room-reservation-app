@@ -64,7 +64,7 @@ export default function MenuLayer() {
             fullWidth
             variant="standard"
             onChange={onChange}
-            value={reservation.name}
+            value={reservation.name||''}
           />
           <DialogContentText>
             예약 목적
@@ -78,7 +78,7 @@ export default function MenuLayer() {
             fullWidth
             variant="standard"
             onChange={onChange}
-            value={reservation.purpose}
+            value={reservation.purpose ||''}
           />
           <DialogContentText>
             예약 시간
@@ -91,7 +91,7 @@ export default function MenuLayer() {
             type="text"
             fullWidth
             variant="standard"
-            value={reservation.time}
+            value={reservation.time || ''}
           />
         </DialogContent>
         <DialogActions>

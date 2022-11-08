@@ -1,7 +1,9 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
-import type { RootState } from './store'
+import type {AppThunk, RootState} from './store'
 import {SAMPLE_DATA} from "../utills/data/sampleData";
-import {Reservation} from "../type";
+import {Reservation, ReservationInfo} from "../type";
+import {AppBarTypeMap} from "@mui/material";
+import Utils from "../utills";
 
 
 
@@ -31,9 +33,33 @@ export const reservationSlice = createSlice({
   },
 })
 
+
 export const { registerReservation,updateReservation } = reservationSlice.actions
 
 // Other code such as selectors can use the imported `RootState` type
 export const selectReservation = (state: RootState) => state.reservation
 
 export default reservationSlice.reducer
+
+export const isOverlapReservation = (newReservation:ReservationInfo):AppThunk => (dispatch, getState) => {
+  const {reservation} = getState();
+
+  const findIndex = reservation.findIndex(({roomName, startTime, endTime})=>
+    (newReservation.roomName===roomName) &&Utils.isIncludesTime(newReservation.startTime, newReservation.endTime, startTime, endTime)
+  )
+  if(findIndex===-1) {
+    dispatch(updateReservation(newReservation))
+  }else {
+    alert('중복 시간 x')
+  }
+  console.log(getState(), 'isOverlapReservation', findIndex, newReservation)
+}
+
+export const incrementIfOdd =
+  (amount: number): AppThunk =>
+    (dispatch, getState) => {
+      // const currentValue = selectCount(getState());
+      // if (currentValue % 2 === 1) {
+      //   dispatch(incrementByAmount(amount));
+      // }
+    };

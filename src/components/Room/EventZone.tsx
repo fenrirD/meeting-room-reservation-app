@@ -1,10 +1,11 @@
-import React, {memo, useEffect, useRef, useState} from "react";
+import React, {memo, useRef} from "react";
 import useResize from "../../hook/useResize";
-import {useDrag, useDrop} from "react-dnd";
+import {useDrag} from "react-dnd";
 import {useDispatch, useSelector} from "react-redux";
-import {selectReservation, updateReservation} from "../../reudx/reservationSlice";
+import {isOverlapReservation, selectReservation} from "../../reudx/reservationSlice";
 import {openMenuLayer} from "../../reudx/menuLayerSlice";
-import {MenuLayer, Reservation, ReservationInfo} from "../../type";
+import {Reservation, ReservationInfo} from "../../type";
+import {AppDispatch} from "../../reudx/store";
 
 interface DropResult {
   name: string
@@ -13,10 +14,9 @@ interface DropResult {
 const EventZone = memo(function EventZone ({roomName,  isResizeDrag, handleLeftResizeClick, handleLeftResizeClearClick}: any)  {
 
   const eventDiv = useRef<HTMLDivElement>(null);
-  const {width, height} = useResize(eventDiv);
+  const {width} = useResize(eventDiv);
 
   const reservations = useSelector(selectReservation).reduce((acc: any, cur: any) => {
-    console.log(acc, 'acc', acc[cur.roomName])
     return ({
       ...acc,
       [cur.roomName]: acc[cur.roomName] ? [...acc[cur.roomName], cur] : [cur]
@@ -39,7 +39,6 @@ const EventComponent = memo(function EventComponent ({reservation, width, isResi
   // const [isDrag, setIsDrag] = useState<Boolean>(false);
 
   //1. 일단은 시작지점을 구한다
-
   const [startTime, endTime] = reservation?.time.split('~');
   const [startHour, startMinute] = startTime.split(':');
   const [endHour, endMinute] = endTime.split(':');
@@ -48,7 +47,8 @@ const EventComponent = memo(function EventComponent ({reservation, width, isResi
   const startLeft = Number(startHour) % 9 + (startMinute === '30' ? 0.5 : 0)
   const calc = ((Number(endHour) * 60 + (Number(endMinute)) - Number(startHour)* 60 + - Number(startMinute) )) / 30
 
-  const dispatch = useDispatch()
+  const dispatch = useDispatch<AppDispatch>()
+  // const dispatch = useAppDispatch();
   const handleEventClick = (data:ReservationInfo) => {
     console.log('handleEventClick', data)
     // handleClickEvent(data)
@@ -74,7 +74,8 @@ const EventComponent = memo(function EventComponent ({reservation, width, isResi
       // console.log('getInitialClientOffset:',monitor.getInitialClientOffset(),'getInitialSourceClientOffset:',monitor.getInitialSourceClientOffset(),',getClientOffset:',monitor.getClientOffset(), ', getSourceClientOffset:',monitor.getSourceClientOffset(), ',d:',monitor.getDifferenceFromInitialOffset())
       if (item && dropResult) {
         console.log(item)
-        dispatch(updateReservation(dropResult?.newItem))
+        dispatch(isOverlapReservation(dropResult?.newItem))
+        // dispatch(updateReservation(dropResult?.newItem))
         // alert(`You dropped ${item.name} into ${dropResult.name}!`)
       }
     },
@@ -102,28 +103,26 @@ const EventComponent = memo(function EventComponent ({reservation, width, isResi
       handleLeftResizeClearClick()
     }
   }
-  // const move = (e:any) => {
-  //   if(isResizeDrag){
-  //     // handleLeftResizeClearClick()
-  //     console.log('reseize evt zone ',e)
-  //   }
-  // }
-  // console.log('drag data=>',data, "???", handlerId)
+
   return (
     <div>
       <div style={{
         width: `${colMWidth * calc}px`,
-        height: '50px',
-        backgroundColor: '#f4a686e3',
-        top: '0.5rem',
+        height:'100%',
         position: 'absolute',
         left: `${((colWidth) * startLeft / width) * 100}%`,
         zIndex: isDragging || isResizeDrag ? 0 : 2,
-        opacity: isDragging || isResizeDrag ? 0.3 : 1
+        opacity: isDragging || isResizeDrag ? 0.3 : 1,
       }}   data-testid={handlerId} onMouseUp={test} >
         <div className='resize_start' onMouseDown={moseDown}  ></div>
         <div className='resize_end'></div>
-        <div onClick={()=>handleEventClick(reservation)} ref={div}>
+        <div onClick={()=>handleEventClick(reservation)} ref={div} style={{
+          height: '50px',
+          backgroundColor: '#f4a686e3',
+          margin: '0.5rem',
+          borderRadius:'0.5rem'
+
+        }}>
           {reservation.name}<br/>
           {reservation.time}
         </div>

@@ -1,8 +1,7 @@
 import React, {useRef} from "react";
 import {useDrop} from "react-dnd";
-import {it} from "node:test";
 
-const RowItem = ({roomName, time, index}: any) => {
+const RowItem = ({roomName, time, index, hour, minutes}: any) => {
 
   const divEl = useRef<HTMLDivElement>(null);
   // console.log('RoomValue','rerneder?')
@@ -35,24 +34,14 @@ const RowItem = ({roomName, time, index}: any) => {
         stTime = 60*9
       }
       console.log(`drag monitor ${Math.floor(stTime/60)}:${stTime%60? '30' : '00'} ~ ${Math.floor(eTime/60)}:${eTime%60? '30' : '00'}`, stTime)
-      const a = monitor.getClientOffset();
-      const b = monitor.getSourceClientOffset();
-      const [startTime, endTime] = item.time.split('~');
-      const [startHour, startMinute] = startTime.split(":").map((v:any)=>Number(v));
-      const [endHour, endMinute] = endTime.split(":").map((v:any)=>Number(v));
-      const calcTime = (endHour*60+endMinute) - (startHour*60+startMinute)
-      const newStartTime = [time, index ? 30 : 0];
-      const newEndTime = (newStartTime[0]*60 + newStartTime[1]) + calcTime;
-      const strTime = `${newStartTime[0]}:${index ? "30" : '00'}~${Math.floor(newEndTime/60)}:${newEndTime%60? '30' : '00'}`
-      // console.log(roomName, item, monitor, a, b)
-      console.log('end Time', newEndTime, calcTime)
       const newItem = {
         ...item,
         roomName: roomName,
-        // time: strTime,
+        startTime: `${Math.floor(stTime/60)}:${stTime%60? '30' : '00'}`,
+        endTime: `${Math.floor(eTime/60)}:${eTime%60? '30' : '00'}`,
         time: `${Math.floor(stTime/60)}:${stTime%60? '30' : '00'}~${Math.floor(eTime/60)}:${eTime%60? '30' : '00'}`
       }
-      return ({name: roomName, left: b?.x, newItem})
+      return ({name: roomName, newItem})
     },
     collect: (monitor) => ({
       isOver: monitor.isOver(),
@@ -64,7 +53,7 @@ const RowItem = ({roomName, time, index}: any) => {
   drop(divEl)
   // console.log('drag monitor drop',coords)
   return (
-    <div ref={divEl} className='room_col_sub' data-index={index} data-time={time} data-id={handlerId} ></div>
+    <div ref={divEl} className='room_col_sub' data-index={index} data-time={time} data-id={handlerId} data-hour={hour} data-minutes={minutes}></div>
 
   )
 }
