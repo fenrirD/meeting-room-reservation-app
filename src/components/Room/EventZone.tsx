@@ -29,7 +29,6 @@ const EventZone = memo(function EventZone ({roomName,  isResizeDrag, handleLeftR
         return <EventComponent reservation={reservation} width={width}
                                key={`evt_${roomName}_${idx}`} isResizeDrag={isResizeDrag} handleLeftResizeClearClick={handleLeftResizeClearClick} handleLeftResizeClick={handleLeftResizeClick}/>
       })}
-
     </div>
   )
 })
@@ -37,15 +36,18 @@ const EventComponent = memo(function EventComponent ({reservation, width, isResi
 
   const div = useRef(null);
   // const [isDrag, setIsDrag] = useState<Boolean>(false);
-
   //1. 일단은 시작지점을 구한다
-  const [startTime, endTime] = reservation?.time.split('~');
-  const [startHour, startMinute] = startTime.split(':');
-  const [endHour, endMinute] = endTime.split(':');
+
+  console.log('EventComponent', reservation)
+  const {startTime, endTime} = reservation;
+  const [startHour, startMinutes] = startTime.split(':');
+  const [endHour, endMinutes] = endTime.split(':');
+
   const colWidth = width / 9
   const colMWidth = width / 18 // 30분 단위로 계산
-  const startLeft = Number(startHour) % 9 + (startMinute === '30' ? 0.5 : 0)
-  const calc = ((Number(endHour) * 60 + (Number(endMinute)) - Number(startHour)* 60 + - Number(startMinute) )) / 30
+  // const startLeft = Number(startHour) % 9 + (startMinutes === '30' ? 0.5 : 0)
+  const startLeft = (Number(startHour) % 9 + (startMinutes === '30' ? 0.5 : 0)) / 9 * 100
+  const calc = ((Number(endHour) * 60 + (Number(endMinutes)) - Number(startHour)* 60 + - Number(startMinutes) )) / 30
 
   const dispatch = useDispatch<AppDispatch>()
   // const dispatch = useAppDispatch();
@@ -110,7 +112,7 @@ const EventComponent = memo(function EventComponent ({reservation, width, isResi
         width: `${colMWidth * calc}px`,
         height:'100%',
         position: 'absolute',
-        left: `${((colWidth) * startLeft / width) * 100}%`,
+        left: `${startLeft}%`,
         zIndex: isDragging || isResizeDrag ? 0 : 2,
         opacity: isDragging || isResizeDrag ? 0.3 : 1,
       }}   data-testid={handlerId} onMouseUp={test} >
