@@ -44,34 +44,35 @@
 .flex_none {
   flex: none;
 }
-.real_time {
-  display: flex;
-  left: auto;
-  overflow: visible;
-  position: -webkit-sticky;
-  position: sticky;
-  right: auto;
-  height: 50px;
-}
+/*.real_time {*/
+/*  display: flex;*/
+/*  left: auto;*/
+/*  overflow: visible;*/
+/*  position: -webkit-sticky;*/
+/*  position: sticky;*/
+/*  right: auto;*/
+/*  height: 50px;*/
+/*  z-index: 10;*/
+/*}*/
 
-.time {
-  position: relative;
-  width: 100%;
-}
-.time_son {
-  box-sizing: content-box;
-  height: 100%;
-  margin-top: -2em;
-  overflow: hidden;
-  padding-top: 2em;
-  pointer-events: none;
-  position: absolute;
-  top: 100%;
-  border: 1px solid blue;
-  left:66%;
+/*.time {*/
+/*  position: relative;*/
+/*  width: 100%;*/
+/*}*/
+/*.time_son {*/
+/*  box-sizing: content-box;*/
+/*  height: 700px;*/
+/*  margin-top: 0em;*/
+/*  overflow: hidden;*/
+/*  !*padding-top: 2em;*!*/
+/*  pointer-events: none;*/
+/*  position: absolute;*/
+/*  top: 100%;*/
+/*  border: 1px solid red;*/
 
-  /*background-color: red;*/
-}
+
+/*  !*background-color: red;*!*/
+/*}*/
 .room {
   display: flex;
   /*flex-direction: column;*/
@@ -227,3 +228,4 @@
   position: absolute;
   width: 0.5em;
 }
+

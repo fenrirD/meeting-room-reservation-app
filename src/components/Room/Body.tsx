@@ -2,19 +2,14 @@ import React, {useRef} from "react";
 import {ROOMS} from "../../utills/data/sampleData";
 import RowName from "./RowName";
 import Row from "./Row";
+import CurrentTime from "../CurrentTime";
 
 const Body = () => {
-//((1752/9)*1.5) / 1752 * 100
+
   return (
     <div className="body">
       <div className='flex_none'></div>
-      <div className='real_time'>
-        <div></div>
-        <div className='time'>
-          <div style={{height: '700px'}} className='time_son'></div>
-          <div style={{left: "66%", position: 'absolute'}}>1</div>
-        </div>
-      </div>
+      <CurrentTime/>
       <div className="room">
         <div></div>
         <RowName/>

@@ -1,0 +1,36 @@
+.current_time_zone {
+  display: flex;
+  left: auto;
+  overflow: visible;
+  position: sticky;
+  right: auto;
+  height: 50px;
+  z-index: 10;
+}
+
+.current_time_zone > :first-child {
+  min-width: 100px;
+  width: 100px;
+}
+
+.current_time {
+  position: relative;
+  width: 100%;
+}
+
+.current_time > :first-child {
+  box-sizing: content-box;
+  height: 700px;
+  margin-top: 0em;
+  overflow: hidden;
+  /*padding-top: 2em;*/
+  pointer-events: none;
+  position: absolute;
+  top: 100%;
+  border: 1px solid red;
+  /*background-color: red;*/
+}
+
+.current_time > :nth-child(2) {
+  position: absolute;
+}
