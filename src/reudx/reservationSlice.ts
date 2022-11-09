@@ -1,15 +1,13 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit'
+import {createSlice} from '@reduxjs/toolkit'
 import type {AppThunk, RootState} from './store'
 import {SAMPLE_DATA} from "../utills/data/sampleData";
 import {Reservation, ReservationInfo} from "../type";
-import {AppBarTypeMap} from "@mui/material";
 import Utils from "../utills";
-
-
+import localStorage from "../utills/localStorage";
 
 // Define the initial state using that type
-const initialState = SAMPLE_DATA as Reservation[]
-
+// const initialState = SAMPLE_DATA as Reservation[]
+const initialState = [] as Reservation[];
 
 export const reservationSlice = createSlice({
   name: 'reservation',
@@ -20,21 +18,19 @@ export const reservationSlice = createSlice({
       state.push({...action.payload, id:(state.length||0)+1})
     },
     updateReservation: (state,action) => {
+      console.log('updateReservation')
+
       const item = action.payload
       return state.map((v:any)=>v.id===item.id ? item : v)
     },
-    // decrement: (state) => {
-    //   state.value -= 1
-    // },
-    // // Use the PayloadAction type to declare the contents of `action.payload`
-    // incrementByAmount: (state, action: PayloadAction<number>) => {
-    //   state.value += action.payload
-    // },
+    deleteReservation: (state,action) => {
+      return state.filter(({id})=>id!==action.payload)
+    }
   },
 })
 
 
-export const { registerReservation,updateReservation } = reservationSlice.actions
+export const { registerReservation,updateReservation, deleteReservation } = reservationSlice.actions
 
 // Other code such as selectors can use the imported `RootState` type
 export const selectReservation = (state: RootState) => state.reservation
@@ -44,8 +40,8 @@ export default reservationSlice.reducer
 export const isOverlapReservation = (newReservation:ReservationInfo):AppThunk => (dispatch, getState) => {
   const {reservation} = getState();
 
-  const findIndex = reservation.findIndex(({roomName, startTime, endTime})=>
-    (newReservation.roomName===roomName) &&Utils.isIncludesTime(newReservation.startTime, newReservation.endTime, startTime, endTime)
+  const findIndex = reservation.findIndex(({roomName, startTime, endTime,id})=>
+    id !== newReservation.id &&(newReservation.roomName===roomName) &&Utils.isIncludesTime(newReservation.startTime, newReservation.endTime, startTime, endTime)
   )
   if(findIndex===-1) {
     dispatch(updateReservation(newReservation))
@@ -55,11 +51,3 @@ export const isOverlapReservation = (newReservation:ReservationInfo):AppThunk =>
   console.log(getState(), 'isOverlapReservation', findIndex, newReservation)
 }
 
-export const incrementIfOdd =
-  (amount: number): AppThunk =>
-    (dispatch, getState) => {
-      // const currentValue = selectCount(getState());
-      // if (currentValue % 2 === 1) {
-      //   dispatch(incrementByAmount(amount));
-      // }
-    };

@@ -3,11 +3,16 @@ import EventZone from "./EventZone";
 import RowItem from "./RowItem";
 import {TIMES} from "../../utills/data/sampleData";
 import _ from "lodash";
-import {useDispatch} from "react-redux";
-import {updateReservation} from "../../reudx/reservationSlice";
+import {useDispatch, useSelector} from "react-redux";
+import {selectReservation, updateReservation} from "../../reudx/reservationSlice";
 import {openMenuLayer} from "../../reudx/menuLayerSlice";
 import {ReservationInfo, RoomData} from "../../type";
 import Utils from "../../utills";
+import {
+  clearResizeReservation,
+  selectResizeReservation,
+  setResizeReservation
+} from "../../reudx/resizeReservationSlice";
 
 
 const Row = ({roomName}: any) => {
@@ -24,6 +29,9 @@ const Row = ({roomName}: any) => {
   // 리사이즈는 리팩토링은 드래그 후
   const [isResizeDrag, setIsResizeDrag] = useState<Boolean>(false);
   const [resizeTarget, setResizeTarget] = useState<any>(null)
+
+  const resizeReservation = useSelector(selectResizeReservation);
+  console.log('resizeReservation',resizeReservation)
 
   const dispatch = useDispatch()
   //TODO 이 부분은 어떻게 사용할지 고민
@@ -63,14 +71,15 @@ const Row = ({roomName}: any) => {
         roomName,
         startTime,
         endTime,
-        time: startTime + "~" + endTime
       })
-
-
       // e.target.classList.remove('test_css')
-    } else if (isResizeDrag) {
-      alert('resize!')
-      setIsResizeDrag(false)
+    } else if (resizeReservation.isResizeReservation) {
+      // Row 위치에 MouseUp이 같이 핸들되는 이유는 드래그하는 위치가 이곳이기 때문이다. 즉 resize 대상은 예약이지만 마우스위치는 Room을 따라감
+      // 결론 => mouseUp, mouseLeave 는 이곳에
+      // 이벤트 주체는 내려가도 redux로 빼주는게 좋을거 같음 그 이유는 Row => EVT zone => evt 3단계 구조를 갖고있음
+      // alert('resize!')
+      dispatch(clearResizeReservation())
+      // setIsResizeDrag(false)
     }
   }
 
@@ -86,15 +95,21 @@ const Row = ({roomName}: any) => {
   }
 
   const resizeMouseMove = (e: any) => {
-    if (isResizeDrag) {
+    const {isResizeReservation, resizeTarget, resizeDirection} = resizeReservation;
+    if (isResizeReservation && resizeTarget) {
+      const {startTime, endTime} = resizeTarget;
+      const standardsTime = Utils.stringTimeToMinutes(resizeDirection === 'left' ? endTime : startTime)
+      const moveTIme = Utils.stringTimeToMinutes(Utils.stringToStringTime(e.target.dataset.hour,e.target.dataset.minutes))
+      const stTime = Math.min(standardsTime,moveTIme);
+      const edTime = standardsTime===moveTIme? moveTIme+30 : Math.max(standardsTime,moveTIme);
 
-      const [startTime, endTime] = resizeTarget.time.split('~');
-      const newTime = `${e.target.dataset.time}:${e.target.dataset.index == 1 ? '30' : '00'}~${endTime}`
-      console.log('resize move =>', e, resizeTarget, e.target.dataset.time, e.target.dataset.index, newTime)
       const newData = {
         ...resizeTarget,
-        time: newTime
+        startTime:Utils.minutesToStringTime(stTime),
+        endTime:Utils.minutesToStringTime(edTime)
       }
+      console.log('left resize', newData)
+
       dispatch(updateReservation(newData))
     }
   }
@@ -105,7 +120,6 @@ const Row = ({roomName}: any) => {
       console.log('mouseup call befor', target)
       roomValEL.current.addEventListener("mousemove", mouseMove)
     } else if (!isDrag) {
-
       const htmlCollection = Array.from(document.getElementsByClassName('test_css'));
       for (const element of htmlCollection) {
         element.classList.remove('test_css')
@@ -119,34 +133,46 @@ const Row = ({roomName}: any) => {
     }
   }, [isDrag, target])
 
+  // 여기서 이벤트 바인딩
   useEffect(() => {
-    console.log('isResizeDrag?', isResizeDrag)
-    if (roomValEL.current && isResizeDrag) {
+    // console.log('isResizeDrag?', isResizeDrag)
+    // if (roomValEL.current && isResizeDrag) {
+    if (roomValEL.current && resizeReservation.isResizeReservation) {
       console.log('mouseup call befor', target)
+      roomValEL.current.style.cursor ='ew-resize'
       roomValEL.current.addEventListener("mousemove", resizeMouseMove)
     }
 
     return () => {
       if (roomValEL.current) {
         roomValEL.current.removeEventListener("mousemove", resizeMouseMove)
+        roomValEL.current.style.cursor ='default'
       }
     }
-  }, [isResizeDrag, resizeTarget])
+  // }, [isResizeDrag, resizeTarget])
+  }, [resizeReservation])
 
   const handleLeftResizeClick = (data: any) => {
     setIsResizeDrag(true)
     setResizeTarget(data)
   }
+
   const handleLeftResizeClearClick = () => {
     setIsResizeDrag(false)
     setResizeTarget(null)
-    alert(1)
   }
 
   const handleMouseLeave = (e: React.MouseEvent<HTMLDivElement>) => {
     e.preventDefault();
     if (isDrag) {
       mouseUp(e)
+    }
+
+    // if(isResizeDrag){
+    if(resizeReservation.isResizeReservation){
+      dispatch(clearResizeReservation())
+      // document.body.style.cursor ='default'
+      // setIsResizeDrag(false)
     }
   }
 
@@ -159,9 +185,9 @@ const Row = ({roomName}: any) => {
            onMouseLeave={handleMouseLeave}>
         {TIMES.map((hour, idx) =>
           <div key={`${roomName}_time_${idx}`}>
-            <RowItem roomName={roomName} time={hour} key={`time_${roomName}_0_${hour}`} index={0} hour={hour}
+            <RowItem roomName={roomName} key={`time_${roomName}_0_${hour}`} index={0} hour={hour}
                      minutes={0}/>
-            <RowItem roomName={roomName} time={hour} key={`time_${roomName}_1_${hour}`} index={1} hour={hour}
+            <RowItem roomName={roomName} key={`time_${roomName}_1_${hour}`} index={1} hour={hour}
                      minutes={30}/>
           </div>
         )}

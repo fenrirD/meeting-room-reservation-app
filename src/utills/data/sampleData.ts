@@ -9,7 +9,6 @@ export const SAMPLE_DATA:Reservation[] = [
     purpose: "그냥",
     startTime:'9:30',
     endTime:'10:30',
-    time: "9:30~10:30"
   },
   {
     id:2,
@@ -18,10 +17,16 @@ export const SAMPLE_DATA:Reservation[] = [
     purpose: "저냥",
     startTime:'12:30',
     endTime:'14:30',
-    time:"12:30~14:30"
   }
-]
+];
 
-export const TIMES:Time[] = [9, 10, 11, 12, 13, 14, 15, 16, 17]
+export const TIMES:Time[] = [9, 10, 11, 12, 13, 14, 15, 16, 17];
 
-export const ROOMS:Room[] = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J',]
+export const ROOMS:Room[] = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J',];
+
+export const MINUTES_COUNT = TIMES.length * 2;
+export const HOUR_COUNT = TIMES.length;
+
+export const ItemType = {
+  RESERVATION: 'reservation'
+}

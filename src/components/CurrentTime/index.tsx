@@ -26,6 +26,16 @@ const CurrentTime = () => {
     getCurrentTime()
   }, [])
 
+  // 9 ~ 17시에 벗어나면 10초마다 체크해줌.
+  useInterval(()=>{
+    const now = new Date();
+    const currentHour = now.getHours();
+    setIsRunning(8 < currentHour && currentHour < 18)
+  },10000, !isRunning)
+
+
+
+
   useInterval(() => {
     getCurrentTime()
   }, 10000, isRunning, [width])

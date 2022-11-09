@@ -8,7 +8,7 @@ import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import {useEffect, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
-import {registerReservation, updateReservation} from "../../reudx/reservationSlice";
+import {deleteReservation, registerReservation, updateReservation} from "../../reudx/reservationSlice";
 import {closeMenuLayer, selectMenuLayer} from "../../reudx/menuLayerSlice";
 import {ReservationInfo} from "../../type";
 
@@ -40,6 +40,11 @@ export default function MenuLayer() {
       ...reservation,
       [e.target.id]: e.target.value,
     })
+  }
+
+  const handleDeleteClick = () => {
+    dispatch(deleteReservation(reservation.id))
+    dispatch(closeMenuLayer())
   }
 
   useEffect(() => {
@@ -91,10 +96,11 @@ export default function MenuLayer() {
             type="text"
             fullWidth
             variant="standard"
-            value={reservation.time || ''}
+            value={`${reservation.startTime} ~ ${reservation.endTime}`}
           />
         </DialogContent>
         <DialogActions>
+          {reservation.id && <Button onClick={handleDeleteClick}>삭제</Button>}
           <Button onClick={handleClose}>취소</Button>
           {
             reservation.id ?

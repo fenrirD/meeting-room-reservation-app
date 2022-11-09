@@ -1,7 +1,7 @@
 
 import {DependencyList, useEffect, useRef} from "react";
 
-export const useInterval = (callback:Function, delay:number, isRunning:boolean, deps?:DependencyList) => {
+export const useInterval = (callback:Function, delay:number, isRunning?:boolean, deps?:DependencyList) => {
   const savedCallback = useRef<Function>();
 
 
