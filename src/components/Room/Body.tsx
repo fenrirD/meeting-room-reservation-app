@@ -1,5 +1,5 @@
 import React, {useRef} from "react";
-import {ROOMS} from "../../utills/data/sampleData";
+import {ROOMS} from "../../constants";
 import RowName from "./RowName";
 import Row from "./Row";
 import CurrentTime from "../CurrentTime";

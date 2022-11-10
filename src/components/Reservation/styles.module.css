@@ -1,0 +1,66 @@
+.reservation {
+  height: 100%;
+  position: absolute;
+}
+
+.reservation > :last-child {
+  height: 50px;
+  margin: 0.5rem;
+  borderRadius: 0.5rem;
+}
+
+.resize_left {
+  height: auto;
+  left: 0;
+  bottom: 0;
+  cursor: ew-resize;
+  left: auto;
+  right: auto;
+  top: 6px;
+  width: 0.25em;
+  display: none;
+  z-index: 5;
+}
+
+.resize_left::after {
+  left: 0.125em;
+  margin-top: -0.25em;
+  top: 45%;
+  background: #fff;
+  border: 1px solid;
+  border-radius: 50%;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  content: "";
+  height: 0.5em;
+  margin: 1px 0;
+  position: absolute;
+  width: 0.5em;
+}
+.resize_right{
+  height: auto;
+  right: 0;
+  display: block;
+  cursor: ew-resize;
+  left: auto;
+  right: auto;
+  top: 6px;
+  width: 0.25em;
+  display: none;
+  z-index: 5;
+}
+.resize_right::after {
+  right: 0.125em;
+  margin-top: -0.25em;
+  top: 45%;
+  background: #fff;
+  border: 1px solid;
+  border-radius: 50%;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  content: "";
+  height: 0.5em;
+  margin: 1px 0;
+  position: absolute;
+  width: 0.5em;
+}

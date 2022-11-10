@@ -13,7 +13,6 @@ export default function useResize(myRef:RefObject<HTMLDivElement>) {
   }, [myRef])
 
   const initialSize = useCallback(()=>{
-    console.log("intial Size!")
     if(myRef.current) {
       setWidth(myRef.current.offsetWidth)
       setHeight(myRef.current.offsetHeight)

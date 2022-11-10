@@ -1,21 +1,16 @@
 import React, {useRef} from "react";
 import {useDrop} from "react-dnd";
-import {ItemType} from "../../utills/data/sampleData";
-import {DragReservation} from "../../type";
-import Utils from "../../utills";
+import {ItemType} from "../../constants";
+import {DragReservation} from "../../types";
+import Utils from "../../utils";
 
 const RowItem = ({roomName, index, hour, minutes}: any) => {
 
   const divEl = useRef<HTMLDivElement>(null);
-  // console.log('RoomValue','rerneder?')
-  const [{canDrop, isOver, handlerId}, drop] = useDrop(() => ({
+  const [{handlerId}, drop] = useDrop(() => ({
     accept: ItemType.RESERVATION,
-    // canDrop: () => false,
     drop: (item:DragReservation, monitor) => {
 
-      // console.log('drag monitor -drop', item,monitor.getClientOffset(), monitor.getInitialClientOffset(), monitor.getInitialSourceClientOffset(), monitor.getDifferenceFromInitialOffset())
-      // monitor.getInitialSourceClientOffset() 클릭한 지점의 중간으로감
-      //getInitialClientOffset - 132 하면 클릭한 위치임 132는 마진 + 네임 위드값
       const selectX:number =  (monitor.getInitialClientOffset()?.x || 0)- 100 ;
       const originStartX = item.originPosition;
       const selectIndex = Math.floor(((selectX-originStartX) / item.halfHourWidth));
@@ -34,7 +29,11 @@ const RowItem = ({roomName, index, hour, minutes}: any) => {
       if(stTime/60 < 9) {
         stTime = 60*9;
       }
-      console.log(`drag monitor ${Math.floor(stTime/60)}:${stTime%60? '30' : '00'} ~ ${Math.floor(eTime/60)}:${eTime%60? '30' : '00'}`, stTime)
+
+      if(eTime /60 > 18) {
+        eTime = 60* 18
+      }
+
       const newItem = {
         id: item.id,
         purpose: item.purpose,

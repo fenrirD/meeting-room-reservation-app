@@ -32,12 +32,6 @@ const persistedReducer = persistReducer(persistConfig, combineReducers({
 }))
 
 export const store = configureStore({
-  // reducer: {
-  //   counter: counterReducer,
-  //   reservation: reservationReducer,
-  //   menuLayer: menuLayerReducer,
-  //   resizeReservation: resizeReservationReducer
-  // },
   reducer: persistedReducer,
   middleware:(getDefaultMiddleware) => getDefaultMiddleware({
     serializableCheck: {

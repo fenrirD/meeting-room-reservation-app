@@ -1,17 +1,12 @@
 import {createSlice} from '@reduxjs/toolkit'
 import type {AppThunk, RootState} from './store'
-import {SAMPLE_DATA} from "../utills/data/sampleData";
-import {Reservation, ReservationInfo} from "../type";
-import Utils from "../utills";
-import localStorage from "../utills/localStorage";
+import {ReservationType, ReservationInfo} from "../types";
+import Utils from "../utils";
 
-// Define the initial state using that type
-// const initialState = SAMPLE_DATA as Reservation[]
-const initialState = [] as Reservation[];
+const initialState = [] as ReservationType[];
 
 export const reservationSlice = createSlice({
   name: 'reservation',
-  // `createSlice` will infer the state type from the `initialState` argument
   initialState: initialState,
   reducers: {
     registerReservation: (state,action) => {

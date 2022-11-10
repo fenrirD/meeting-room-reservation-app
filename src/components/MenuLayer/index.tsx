@@ -10,7 +10,7 @@ import {useEffect, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import {deleteReservation, registerReservation, updateReservation} from "../../reudx/reservationSlice";
 import {closeMenuLayer, selectMenuLayer} from "../../reudx/menuLayerSlice";
-import {ReservationInfo} from "../../type";
+import {ReservationInfo} from "../../types";
 
 export default function MenuLayer() {
 
@@ -18,13 +18,18 @@ export default function MenuLayer() {
   const {isOpen, reservationInfo} = useSelector(selectMenuLayer);
 
   const [reservation, setReservation] = useState<ReservationInfo>(reservationInfo);
+  const [isValidation, setIsValidation] = useState<boolean>(false)
 
   const handleRegisterClick = () => {
-    console.log('!!!!!! handle', reservation)
-    // handleConfirm()
-    dispatch(registerReservation(reservation))
-    handleClose()
+    const {name} = reservation
+    if (name) {
+      dispatch(registerReservation(reservation))
+      handleClose()
+    } else {
+      alert("예약자명은 필수입니다.")
+    }
   }
+
   const handleEditClick = () => {
     dispatch(updateReservation(reservation))
     handleClose()
@@ -35,7 +40,6 @@ export default function MenuLayer() {
   };
 
   const onChange = (e: any) => {
-    console.log(e, "change", reservation)
     setReservation({
       ...reservation,
       [e.target.id]: e.target.value,
@@ -51,7 +55,15 @@ export default function MenuLayer() {
     setReservation(reservationInfo)
   }, [reservationInfo])
 
-  // console.log(event)
+  useEffect(() => {
+    if (reservation.name) {
+      setIsValidation(true)
+    } else {
+      setIsValidation(false)
+    }
+
+  }, [reservation.name])
+
   return (
     <div>
       <Dialog open={isOpen} onClose={handleClose} fullWidth={true}>
@@ -64,12 +76,13 @@ export default function MenuLayer() {
             autoFocus
             margin="dense"
             id="name"
-            label="Email Address"
+            label="이름"
+            required
             type="text"
             fullWidth
             variant="standard"
             onChange={onChange}
-            value={reservation.name||''}
+            value={reservation.name || ''}
           />
           <DialogContentText>
             예약 목적
@@ -78,12 +91,12 @@ export default function MenuLayer() {
             autoFocus
             margin="dense"
             id="purpose"
-            label="Email Address"
+            label="목적"
             type="text"
             fullWidth
             variant="standard"
             onChange={onChange}
-            value={reservation.purpose ||''}
+            value={reservation.purpose || ''}
           />
           <DialogContentText>
             예약 시간
@@ -92,23 +105,24 @@ export default function MenuLayer() {
             autoFocus
             margin="dense"
             id="time"
-            label="Email Address"
             type="text"
             fullWidth
             variant="standard"
+            disabled
             value={`${reservation.startTime} ~ ${reservation.endTime}`}
           />
         </DialogContent>
         <DialogActions>
-          {reservation.id && <Button onClick={handleDeleteClick}>삭제</Button>}
-          <Button onClick={handleClose}>취소</Button>
+          <Button variant="contained" onClick={handleClose} color={"warning"}>취소</Button>
+          {reservation.id && <Button variant="contained" onClick={handleDeleteClick} color={"error"}>삭제</Button>}
           {
             reservation.id ?
-              <Button onClick={handleEditClick}>수정</Button>
+              <Button onClick={handleEditClick} color={"primary"} variant="contained"
+                      disabled={!isValidation}>수정</Button>
               :
-              <Button onClick={handleRegisterClick}>등록</Button>
+              <Button onClick={handleRegisterClick} color={"primary"} variant="contained"
+                      disabled={!isValidation}>등록</Button>
           }
-
         </DialogActions>
       </Dialog>
     </div>

@@ -1,12 +1,12 @@
 import React from "react";
-import {ROOMS} from "../../utills/data/sampleData";
-import {Room} from "../../type";
+import {ROOMS} from "../../constants";
+import {RoomNameType} from "../../types";
 
 const RoomName = () => {
 
   return (
     <div className="room_name">
-      {ROOMS.map((room:Room)=> <div key={`room_${room}`}>{room}</div>)}
+      {ROOMS.map((room:RoomNameType)=> <div key={`room_${room}`}>{room}</div>)}
     </div>
   )
 }

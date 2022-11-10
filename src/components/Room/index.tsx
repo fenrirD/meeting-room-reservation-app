@@ -1,13 +1,15 @@
 import React from "react";
 import './index.css'
-import Header from "./Haeder";
+// import Header from "./Haeder";
 import Body from "./Body";
+import {Header} from '../Grid'
+import {TIMES} from "../../constants";
 
 const Room = () => {
 
   return (
     <>
-      <Header/>
+      <Header names={TIMES}/>
       <Body/>
     </>
   )
