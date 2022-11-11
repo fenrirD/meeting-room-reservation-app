@@ -1,16 +1,17 @@
 import React from "react";
-import './index.css'
-// import Header from "./Haeder";
-import Body from "./Body";
-import {Header} from '../Grid'
-import {TIMES} from "../../constants";
+import {ROOMS} from "../../constants";
+import RoomName from "./RoomName";
+import RoomRow from "./RoomRow/index";
+
 
 const Room = () => {
 
   return (
     <>
-      <Header names={TIMES}/>
-      <Body/>
+      <RoomName/>
+      <div>
+        {ROOMS.map((room,idx)=><RoomRow roomName={room} key={`room_${room}_${idx}`}/>)}
+      </div>
     </>
   )
 }

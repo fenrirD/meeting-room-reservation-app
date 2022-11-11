@@ -5,7 +5,7 @@ import {
   selectResizeReservation,
   startResizeReservation
 } from "../../reudx/resizeReservationSlice";
-import ReservationProps, {DragReservation, ReservationType, ReservationInfo, ResizeReservation} from "../../types";
+import ReservationProps, {DragReservation, ReservationInfo, ReservationType, ResizeReservation} from "../../types";
 import {HOUR_COUNT, ItemType, MINUTES_COUNT} from "../../constants";
 import Utils from "../../utils";
 import {AppDispatch} from "../../reudx/store";
@@ -67,7 +67,7 @@ const Reservation = memo(forwardRef(function Reservation({
       }
     }
 
-  }, [resizeReservation.isResizeReservation, currentReservation])
+  }, [resizeReservation.isResizeReservation, currentReservation, isResize])
 
 
   const handleMouseLeave = (e: any) => {
@@ -144,7 +144,7 @@ const Reservation = memo(forwardRef(function Reservation({
     }
 
   }
-  
+
   const resizeMouseUp = () => {
     if (resizeReservation.isResizeReservation && isResize) {
       dispatch(clearResizeReservation())
@@ -157,8 +157,8 @@ const Reservation = memo(forwardRef(function Reservation({
       <div style={{
         width: `${width}px`,
         left: `${leftPosition}%`,
-        zIndex: isDragging || isResize && resizeReservation.isResizeReservation ? 0 : 2,
-        opacity: isDragging || isResize && resizeReservation.isResizeReservation ? 0.3 : 1,
+        zIndex: (isDragging || (isResize && resizeReservation.isResizeReservation)) ? 0 : 2,
+        opacity: (isDragging || (isResize && resizeReservation.isResizeReservation)) ? 0.3 : 1,
       }} data-testid={handlerId} onMouseUp={resizeMouseUp} className={styles.reservation}>
         <div className={styles.resize_left} onMouseDown={resizeMouseDown} data-resize-direction='left'/>
         <div className={styles.resize_right} onMouseDown={resizeMouseDown} data-resize-direction='right'/>

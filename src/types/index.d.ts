@@ -40,10 +40,7 @@ export interface DragReservation extends ReservationType {
 }
 
 export interface ResizeReservation extends ReservationType {
-  // isResizeReservation: boolean,
-
   resizeDirection?: 'left' | 'right' | null | undefined ,
-  // resizeTarget: Reservation | null
 }
 
 

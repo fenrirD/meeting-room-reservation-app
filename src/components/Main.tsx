@@ -1,13 +1,13 @@
-import React, {useRef} from "react";
+import React from "react";
 import '../App.css'
-import Room from "./Room";
 import MenuLayer from "./MenuLayer";
+import RoomLayout from "./RoomLayout";
 
 const Main = () => {
 
   return (
     <div className='main'>
-      <Room/>
+      <RoomLayout/>
       <MenuLayer/>
     </div>
   )

@@ -1,0 +1,64 @@
+.room_name {
+  display: flex;
+  width: 100px;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  min-width: 100px;
+  border-right: 1px solid;
+  text-align: center;
+
+}
+.room_name div {
+  display: flex;
+  min-height: 69px;
+  max-height: 69px;
+  border-bottom: 1px solid;
+  width: 100%;
+  text-align: center;
+  align-items: center;
+  justify-content: center;
+}
+
+.room_val {
+  overflow: clip;
+  position: relative;
+  flex: 1 0 auto;
+  flex-direction: column;
+  min-height: 69px;
+  display: flex;
+}
+
+.room_row {
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  border-bottom: 1px solid;
+  height: 69px;
+  display: flex;
+  position: relative;
+}
+
+.room_row_col {
+  display: flex;
+  flex: 1 0 auto;
+  width: 100%;
+  min-height: 69px;
+  max-height: 69px;
+  z-index: 1;
+}
+.room_row_col > div {
+  display: flex;
+  flex: 1 0 auto;
+}
+
+.room_col_sub {
+  flex: 1 0 auto;
+  /*  min-width: 6rem;*/
+  border-right: 1px solid;
+}
+
+.room_row_move {
+  background: #f5d9fa78;
+  cursor: move;
+}

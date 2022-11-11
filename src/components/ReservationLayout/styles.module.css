@@ -1,0 +1,20 @@
+.reservation_layout {
+  bottom: 1em;
+  position: absolute;
+  top: 0;
+  width: 100%;
+  height: 100%;
+}
+.reservation_layout > :last-child {
+  cursor: pointer;
+  border-radius: 0.5rem;
+}
+
+.reservation_layout div {
+  z-index: 2;
+
+}
+
+.reservation_layout div div:hover div {
+  display: block;
+}

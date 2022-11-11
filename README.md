@@ -1,5 +1,28 @@
 # 회의실 예약 관리 프로그램
 
+
+## 설치
+
+### ✔ Requirements
+- node
+- yarn
+
+> [Node 설치 페이지](https://nodejs.org/ko/) \
+> [Yarn 설치 페이지](https://yarnpkg.com/getting-started/install)
+> 
+### 실행 방법
+
+```shell
+
+$ git clone https://github.com/fenrirD/meeting-room-reservation-app.git
+
+$ cd ./meeting-room-reservation-app
+
+$ yarn 
+
+$ yanr start # http://localhost:3000
+```
+
 ## 개발 요구사항
 
 ### 1.회의실 현황판
