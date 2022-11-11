@@ -3,7 +3,6 @@ import CurrentTime from "../../CurrentTime";
 import styles from '../styles.module.css';
 
 const RoomBody = ({children}:any) => {
-  // console.log('roombody', children)
   return (
     <div className={styles.room_body}>
       <div className={styles.flex_none}></div>

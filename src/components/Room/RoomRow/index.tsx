@@ -1,8 +1,7 @@
-import React, {useCallback, useEffect, useRef, useState} from "react";
+import React, {useEffect, useRef, useState} from "react";
 import Reservation from "../../ReservationLayout";
 import RowItem from "./RowItem";
 import {TIMES} from "../../../constants";
-import _ from "lodash";
 import {useDispatch, useSelector} from "react-redux";
 import {openMenuLayer} from "../../../reudx/menuLayerSlice";
 import {ReservationInfo, RoomData} from "../../../types";
@@ -19,26 +18,19 @@ const RoomRow = ({roomName}: any) => {
   // 새롭게 등록할 예약 일정
   const [roomData, setRoomData] = useState<RoomData>({});
   // css 지우기 위한 방법인데 이건 변경할 예정 굳이 무브에 담을 필요 x
-  const [target, setTarget] = useState<any>([]);
-
-
-  // 리사이즈는 리팩토링은 드래그 후
-  const [isResizeDrag, setIsResizeDrag] = useState<Boolean>(false);
-  const [resizeTarget, setResizeTarget] = useState<any>(null)
+  // const [target, setTarget] = useState<any>([]);
 
   const resizeReservation = useSelector(selectResizeReservation);
-  // console.log('resizeReservation', resizeReservation)
 
   const dispatch = useDispatch()
   //TODO 이 부분은 어떻게 사용할지 고민
-  const a = useCallback(_.throttle((e: any) => {
-    const n = target.filter((div: HTMLDivElement) => div.dataset.id !== e.dataset.id)
-    // console.log('mouseup', n, e.dataset.id)
-    setTarget([...n, e])
-  }, 500), [target])
+  // const a = useCallback(_.throttle((e: any) => {
+  //   const n = target.filter((div: HTMLDivElement) => div.dataset.id !== e.dataset.id)
+  //   setTarget([...n, e])
+  // }, 500), [target])
 
 
-  const mouseMove = (e: any) => {
+  const handleMouseMove = (e: any) => {
     if (isDrag && e.target.dataset.id) {
       e.target.classList.add(styles.room_row_move)
     }
@@ -47,7 +39,7 @@ const RoomRow = ({roomName}: any) => {
 
   const registerReservation = (param: ReservationInfo) => dispatch(openMenuLayer(param))
 
-  const mouseUp = (e: any) => {
+  const HandleMouseUp = (e: any) => {
     e.preventDefault()
     if (roomValEL?.current && isDrag && e.target instanceof HTMLDivElement) {
       const {hour, minutes} = e.target.dataset;
@@ -58,7 +50,6 @@ const RoomRow = ({roomName}: any) => {
       const startTime = Utils.minutesToStringTime(Math.min(selectTime, beforeTime));
       const endTime = Utils.minutesToStringTime(Math.max(selectTime, beforeTime) + 30);
 
-      console.log('mouseup!', e, e.target, selectTime, beforeTime)
       setIsDrag(false)
       //초기화
       setRoomData({})
@@ -67,7 +58,7 @@ const RoomRow = ({roomName}: any) => {
         startTime,
         endTime,
       })
-      // e.target.classList.remove('test_css')
+
     }
   }
 
@@ -75,7 +66,6 @@ const RoomRow = ({roomName}: any) => {
     e.preventDefault()
     if (roomValEL?.current && e.target instanceof HTMLDivElement) {
       const {hour, minutes} = e.target.dataset;
-      console.log('mouse down', hour, minutes, e.target.dataset.hour)
       setRoomData((v) => ({...v, firstMinutes: Utils.stringTimeToMinutes(Utils.stringToStringTime(hour, minutes))}))
       setIsDrag(true);
     }
@@ -85,9 +75,8 @@ const RoomRow = ({roomName}: any) => {
 
   useEffect(() => {
     if (roomValEL.current && isDrag) {
-      console.log('mouseup call befor', target)
-      roomValEL.current.addEventListener("mousemove", mouseMove)
-      roomValEL.current.addEventListener("mouseup", mouseUp)
+      roomValEL.current.addEventListener("mousemove", handleMouseMove)
+      roomValEL.current.addEventListener("mouseup", HandleMouseUp)
       roomValEL.current.addEventListener("mouseleave", handleMouseLeave)
     } else if (!isDrag) {
       const htmlCollection = Array.from(document.getElementsByClassName(styles.room_row_move));
@@ -97,18 +86,18 @@ const RoomRow = ({roomName}: any) => {
     }
     return () => {
       if (roomValEL.current) {
-        roomValEL.current.removeEventListener("mousemove", mouseMove)
-        roomValEL.current.removeEventListener("mouseup", mouseUp)
+        roomValEL.current.removeEventListener("mousemove", handleMouseMove)
+        roomValEL.current.removeEventListener("mouseup", HandleMouseUp)
         roomValEL.current.removeEventListener("mouseleave", handleMouseLeave)
       }
     }
-  }, [isDrag, target])
+  }, [isDrag])
 
 
   const handleMouseLeave = (e: any) => {
     e.preventDefault();
     if (isDrag) {
-      mouseUp(e)
+      HandleMouseUp(e)
     }
 
     if (resizeReservation.isResizeReservation) {
@@ -120,9 +109,6 @@ const RoomRow = ({roomName}: any) => {
     <div className={styles.room_row}>
       <Reservation roomName={roomName} ref={roomValEL}/>
       <div/>
-      {/*<div className='room_col' ref={roomValEL} onMouseDown={handleMouseDown} onMouseUp={mouseUp}*/}
-      {/*     onMouseLeave={handleMouseLeave}>*/}
-
         <div className={styles.room_row_col} ref={roomValEL} onMouseDown={handleMouseDown} >
         {TIMES.map((hour, idx) =>
           <div key={`${roomName}_time_${idx}`}>

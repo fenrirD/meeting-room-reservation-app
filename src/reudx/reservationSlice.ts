@@ -13,10 +13,8 @@ export const reservationSlice = createSlice({
       state.push({...action.payload, id:(state.length||0)+1})
     },
     updateReservation: (state,action) => {
-      console.log('updateReservation')
-
       const item = action.payload
-      return state.map((v:any)=>v.id===item.id ? item : v)
+      return state.map((v:ReservationType)=>v.id===item.id ? item : v)
     },
     deleteReservation: (state,action) => {
       return state.filter(({id})=>id!==action.payload)

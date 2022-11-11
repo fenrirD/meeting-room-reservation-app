@@ -33,4 +33,7 @@
 
 .current_time > :nth-child(2) {
   position: absolute;
+  color: blue;
+  font-weight: 600;
+  top:28px
 }
